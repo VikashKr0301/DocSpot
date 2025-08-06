@@ -5,7 +5,6 @@ import { motion, useInView } from 'framer-motion';
 
 const SpecialityMenu = () => {
     const ref = React.useRef(null);
-    // Trigger animation when the component is 20% in view
     const isInView = useInView(ref, { once: true, amount: 0.2 });
 
     const containerVariants = {
@@ -41,32 +40,37 @@ const SpecialityMenu = () => {
         <motion.div
             ref={ref}
             id='speciality'
-            className='flex flex-col items-center gap-5 py-8 sm:py-12 md:py-16 px-4 md:px-8 overflow-hidden'
+            className='flex flex-col items-center gap-5 py-8 sm:py-12 md:py-16 px-4 md:px-8'
             variants={containerVariants}
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}
         >
-            <motion.h1 variants={itemVariants} className='text-2xl sm:text-3xl font-bold text-slate-800 text-center'>
+            <motion.h1
+                variants={itemVariants}
+                className='text-2xl sm:text-3xl font-bold text-slate-800 text-center'
+            >
                 Find by <span className='text-primary'>Speciality</span>
             </motion.h1>
-            <motion.p variants={itemVariants} className='max-w-xl text-center text-slate-600 text-sm sm:text-base px-2'>
+
+            <motion.p
+                variants={itemVariants}
+                className='max-w-xl text-center text-slate-600 text-sm sm:text-base px-2'
+            >
                 Simply browse through our extensive list of trusted doctors, schedule your appointment hassle-free.
             </motion.p>
 
             <motion.div
                 variants={listVariants}
-                className='w-full max-w-7xl flex justify-start gap-3 sm:gap-4 md:gap-6 pt-6 sm:pt-8 overflow-x-auto no-scrollbar cursor-grab active:cursor-grabbing pb-2'
-                drag="x" // Enable horizontal dragging
-                dragConstraints={{ left: -500, right: 0 }} 
+                className='w-full max-w-7xl flex justify-start gap-3 sm:gap-4 md:gap-6 pt-6 sm:pt-8 overflow-x-auto no-scrollbar cursor-grab active:cursor-grabbing'
+                drag="x"
+                dragConstraints={{ left: -500, right: 0 }}
                 dragTransition={{ bounceStiffness: 200, bounceDamping: 20 }}
-                style={{ scrollSnapType: 'x mandatory' }} 
             >
                 {specialityData.map((item, index) => (
                     <motion.div
                         key={index}
                         variants={specialityItemVariants}
                         whileHover={{ y: -8, transition: { type: 'spring', stiffness: 300 } }}
-                        className='scroll-snap-align-start' 
                     >
                         <Link
                             to={`/doctors/${item.speciality}`}
@@ -75,11 +79,11 @@ const SpecialityMenu = () => {
                         >
                             <motion.img
                                 whileHover={{ scale: 1.05 }}
-                                className='w-20 h-20 sm:w-24 sm:h-24 md:w-36 md:h-36 object-contain p-3 sm:p-4 md:p-5 bg-primary/10 rounded-full transition-colors group-hover:bg-primary/30'
+                                className='w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 object-contain p-3 sm:p-4 md:p-5 bg-primary/10 rounded-full transition-colors group-hover:bg-primary/20'
                                 src={item.image}
                                 alt={`${item.speciality} icon`}
                             />
-                            <p className='font-semibold text-slate-700 mt-2 md:mt-4 text-xs sm:text-sm md:text-base leading-tight'>
+                            <p className='font-semibold text-slate-700 mt-2 sm:mt-3 md:mt-4 text-xs sm:text-sm md:text-base leading-tight'>
                                 {item.speciality}
                             </p>
                         </Link>
@@ -89,5 +93,4 @@ const SpecialityMenu = () => {
         </motion.div>
     );
 };
-
 export default SpecialityMenu;

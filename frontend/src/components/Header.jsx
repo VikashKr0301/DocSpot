@@ -4,7 +4,6 @@ import { FiArrowRight } from 'react-icons/fi';
 import { FaPlus, FaStethoscope, FaHeartbeat, FaCapsules } from 'react-icons/fa';
 import { assets } from '../assets/assets';
 
-
 const AnimatedNumber = ({ to, suffix = "" }) => {
     const nodeRef = useRef(null);
     useEffect(() => {
@@ -75,7 +74,7 @@ const Header = () => {
         <motion.div
             ref={targetRef}
             onMouseMove={handleMouseMove}
-            className='relative flex flex-col md:flex-row items-center bg-gradient-to-br from-white to-blue-50/50 rounded-2xl overflow-hidden my-10 mx-auto max-w-7xl'
+            className='relative flex flex-col md:flex-row items-center bg-gradient-to-br from-white to-blue-50/50 rounded-2xl overflow-hidden mt-2 sm:mt-4 md:mt-6 lg:mt-8 mx-auto max-w-7xl'
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
@@ -104,18 +103,18 @@ const Header = () => {
             </motion.div>
 
             {/* --------- Header Left: Text Content --------- */}
-            <div className='w-full md:w-1/2 flex flex-col items-center md:items-start text-center md:text-left justify-center gap-6 p-8 sm:p-12 lg:p-16 z-10'>
-                <motion.h1 className='text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-tight tracking-tight' variants={itemVariants}>
+            <div className='w-full md:w-1/2 flex flex-col items-center md:items-start text-center md:text-left justify-center gap-4 sm:gap-5 md:gap-6 p-6 sm:p-8 md:p-10 lg:p-12 z-10'>
+                <motion.h1 className='text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-tight tracking-tight' variants={itemVariants}>
                     Your Health, <br /> Our Priority.
                 </motion.h1>
-                <motion.p className='text-slate-600 max-w-md text-base lg:text-lg' variants={itemVariants}>
+                <motion.p className='text-slate-600 max-w-md text-sm sm:text-base lg:text-lg' variants={itemVariants}>
                     Instantly book appointments with the best doctors in India. Quality healthcare is now at your fingertips.
                 </motion.p>
-                <motion.a href='#speciality' className='group inline-flex items-center gap-3 bg-primary text-white font-bold px-8 py-3.5 rounded-full mt-2 shadow-lg shadow-primary/30' variants={itemVariants} whileHover={{ scale: 1.05, boxShadow: "0px 15px 30px -10px rgba(66, 153, 225, 0.5)" }} whileTap={{ scale: 0.95 }} transition={{ type: 'spring', stiffness: 400, damping: 17 }}>
+                <motion.a href='#speciality' className='group inline-flex items-center gap-3 bg-primary text-white font-bold px-6 sm:px-8 py-3 sm:py-3.5 rounded-full mt-1 sm:mt-2 shadow-lg shadow-primary/30 text-sm sm:text-base' variants={itemVariants} whileHover={{ scale: 1.05, boxShadow: "0px 15px 30px -10px rgba(66, 153, 225, 0.5)" }} whileTap={{ scale: 0.95 }} transition={{ type: 'spring', stiffness: 400, damping: 17 }}>
                     Find a Doctor
                     <FiArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
                 </motion.a>
-                <motion.div className='flex flex-col sm:flex-row items-center gap-8 md:gap-12 pt-8' variants={itemVariants}>
+                <motion.div className='flex flex-col sm:flex-row items-center gap-6 sm:gap-8 md:gap-10 lg:gap-12 pt-4 sm:pt-6 md:pt-8' variants={itemVariants}>
                     <motion.div className='text-center' whileHover={{ scale: 1.05, y: -5 }} transition={{ type: 'spring', stiffness: 300 }}>
                         <AnimatedNumber to={100} suffix="+" />
                         <p className='text-sm text-slate-500 tracking-wide mt-1'>Expert Doctors</p>
@@ -129,17 +128,17 @@ const Header = () => {
 
             {/* --------- Header Right: Image & Shape --------- */}
             <motion.div
-                className='w-full md:w-1/2 h-[450px] sm:h-[550px] md:min-h-[600px] self-end flex items-end justify-center'
+                className='w-full md:w-1/2 h-[350px] sm:h-[400px] md:h-[500px] lg:h-[550px] xl:min-h-[600px] self-end flex items-end justify-center mt-4 md:mt-0'
                 variants={imageVariants}
             >
                 <motion.div
-                    className='absolute top-1/2 left-3/4 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] md:w-[600px] md:h-[600px] bg-primary/20 rounded-full blur-3xl'
+                    className='absolute top-1/2 left-3/4 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] md:w-[500px] md:h-[500px] lg:w-[600px] lg:h-[600px] bg-primary/20 rounded-full blur-3xl'
                     variants={blobVariants}
                     animate="animate"
                     style={{ x: parallaxX, y: parallaxY }}
                 ></motion.div>
                 <img
-                    className='relative z-10 w-full max-w-md md:max-w-none h-full object-contain object-bottom'
+                    className='relative z-10 w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-none h-full object-contain object-bottom'
                     src={assets.header_img}
                     alt="A friendly doctor holding a clipboard"
                 />
