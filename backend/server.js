@@ -15,7 +15,13 @@ connectCloudinary();
 
 // middlewares
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: [
+        'https://docspot-frontend-tvi6.onrender.com',
+        'https://docspot-admin.onrender.com'
+    ],
+    credentials: true
+}));
 
 // api endpoints
 app.use("/api/user", userRouter);
