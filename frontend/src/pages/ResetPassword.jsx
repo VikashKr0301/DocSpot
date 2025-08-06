@@ -46,7 +46,7 @@ const ResetPassword = () => {
                 // Redirect to appropriate login page
                 setTimeout(() => {
                     if (type === 'doctor') {
-                        window.location.href = 'http://localhost:5174'; // Redirect to admin login
+                        window.location.href = 'https://docspot-admin.onrender.com'; // Redirect to admin login
                     } else {
                         navigate('/login');
                     }
