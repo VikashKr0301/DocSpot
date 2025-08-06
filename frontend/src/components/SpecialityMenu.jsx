@@ -41,44 +41,47 @@ const SpecialityMenu = () => {
         <motion.div
             ref={ref}
             id='speciality'
-            className='flex flex-col items-center gap-5 py-16 px-4 md:px-8 overflow-hidden'
+            className='flex flex-col items-center gap-5 py-8 sm:py-12 md:py-16 px-4 md:px-8 overflow-hidden'
             variants={containerVariants}
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}
         >
-            <motion.h1 variants={itemVariants} className='text-3xl font-bold text-slate-800'>
+            <motion.h1 variants={itemVariants} className='text-2xl sm:text-3xl font-bold text-slate-800 text-center'>
                 Find by <span className='text-primary'>Speciality</span>
             </motion.h1>
-            <motion.p variants={itemVariants} className='max-w-xl text-center text-slate-600'>
+            <motion.p variants={itemVariants} className='max-w-xl text-center text-slate-600 text-sm sm:text-base px-2'>
                 Simply browse through our extensive list of trusted doctors, schedule your appointment hassle-free.
             </motion.p>
 
             <motion.div
                 variants={listVariants}
-                className='w-full max-w-7xl flex justify-start gap-4 md:gap-6 pt-8 overflow-x-auto no-scrollbar cursor-grab active:cursor-grabbing'
+                className='w-full max-w-7xl flex justify-start gap-3 sm:gap-4 md:gap-6 pt-6 sm:pt-8 overflow-x-auto no-scrollbar cursor-grab active:cursor-grabbing pb-2'
                 drag="x" // Enable horizontal dragging
-                dragConstraints={{ left: -300, right: 0 }} // Constraints for dragging
+                dragConstraints={{ left: -500, right: 0 }} 
                 dragTransition={{ bounceStiffness: 200, bounceDamping: 20 }}
+                style={{ scrollSnapType: 'x mandatory' }} 
             >
                 {specialityData.map((item, index) => (
                     <motion.div
                         key={index}
                         variants={specialityItemVariants}
-                        whileHover={{ y: -12, transition: { type: 'spring', stiffness: 300 } }}
+                        whileHover={{ y: -8, transition: { type: 'spring', stiffness: 300 } }}
+                        className='scroll-snap-align-start' 
                     >
                         <Link
                             to={`/doctors/${item.speciality}`}
                             onClick={() => window.scrollTo(0, 0)}
-                            className='flex flex-col items-center text-center group cursor-pointer flex-shrink-0 w-36' 
+                            className='flex flex-col items-center text-center group cursor-pointer flex-shrink-0 w-24 sm:w-28 md:w-36'
                         >
                             <motion.img
                                 whileHover={{ scale: 1.05 }}
-                                // Adjusted width and height for the image
-                                className='w-36 h-36 object-contain p-5 bg-primary/10 rounded-full transition-colors group-hover:bg-primary/30'
+                                className='w-20 h-20 sm:w-24 sm:h-24 md:w-36 md:h-36 object-contain p-3 sm:p-4 md:p-5 bg-primary/10 rounded-full transition-colors group-hover:bg-primary/30'
                                 src={item.image}
                                 alt={`${item.speciality} icon`}
                             />
-                            <p className='font-semibold text-slate-700 mt-4'>{item.speciality}</p>
+                            <p className='font-semibold text-slate-700 mt-2 md:mt-4 text-xs sm:text-sm md:text-base leading-tight'>
+                                {item.speciality}
+                            </p>
                         </Link>
                     </motion.div>
                 ))}

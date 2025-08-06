@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { assets } from '../assets/assets';
-import { NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiX, FiMenu } from 'react-icons/fi';
@@ -10,14 +10,21 @@ const Navbar = () => {
   const location = useLocation();
   const [showMenu, setShowMenu] = useState(false);
   const { token, setToken, userData } = useContext(AppContext);
-
-  // --- State to track hovered link for the sliding underline ---
   const [hoveredPath, setHoveredPath] = useState(null);
 
-  const logout = () => {
+  // --- Centralized navigation handler with smooth scroll ---
+  const handleNavigation = (path) => {
+    navigate(path);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setShowMenu(false);
+  };
+
+  // --- Logout handler ---
+  const handleLogout = () => {
     localStorage.removeItem('token');
     setToken(false);
     navigate('/login');
+    setShowMenu(false);
   };
 
   const navLinks = [
@@ -33,11 +40,8 @@ const Navbar = () => {
     exit: { opacity: 0, scale: 0.95, y: -10, transition: { duration: 0.1 } }
   };
 
-  // --- Variants for staggering mobile menu items ---
   const mobileListVariants = {
-    visible: {
-      transition: { staggerChildren: 0.08, delayChildren: 0.1 }
-    },
+    visible: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
     hidden: {}
   };
 
@@ -49,12 +53,14 @@ const Navbar = () => {
   return (
     <div className='sticky top-0 z-50 bg-white border-b border-gray-200'>
       <div className='flex items-center justify-between py-4 px-4 lg:px-8 max-w-7xl mx-auto'>
-        <div className='flex items-center gap-3 cursor-pointer' onClick={() => navigate('/')}>
+
+        {/* Logo */}
+        <div className='flex items-center gap-3 cursor-pointer' onClick={() => handleNavigation('/')}>
           <img className='w-10' src={assets.logo} alt="DocSpot Logo" />
           <span className='font-bold text-xl text-gray-800'>DocSpot</span>
         </div>
 
-        {/* ---- Desktop Menu with Sliding Underline ---- */}
+        {/* Desktop Menu */}
         <ul onMouseLeave={() => setHoveredPath(null)} className='lg:flex items-center gap-8 font-medium hidden'>
           {navLinks.map((link) => {
             const isActive = location.pathname === link.path;
@@ -64,9 +70,13 @@ const Navbar = () => {
                 onMouseEnter={() => setHoveredPath(link.path)}
                 className="relative py-2"
               >
-                <NavLink to={link.path} className={`relative transition-colors ${hoveredPath === link.path || isActive ? 'text-primary' : 'text-gray-600'}`}>
+                <button
+                  onClick={() => handleNavigation(link.path)}
+                  className={`relative transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 rounded-sm px-1 ${hoveredPath === link.path || isActive ? 'text-primary' : 'text-gray-600'
+                    }`}
+                >
                   {link.label}
-                </NavLink>
+                </button>
                 {(isActive || hoveredPath === link.path) && (
                   <motion.div
                     className="absolute bottom-0 left-0 w-full h-[3px] bg-primary rounded-full"
@@ -81,38 +91,66 @@ const Navbar = () => {
           })}
         </ul>
 
+        {/* Right Side Actions */}
         <div className='flex items-center gap-4'>
           {token && userData ? (
             <div className='group relative hidden lg:flex cursor-pointer items-center gap-2'>
               <img className='w-10 h-10 rounded-full object-cover border-2 border-primary/50' src={userData.image} alt="User" />
               <img className='w-2.5 transition-transform duration-300 group-hover:rotate-180' src={assets.dropdown_icon} alt="" />
+
+              {/* Desktop Dropdown */}
               <AnimatePresence>
                 <motion.div
                   variants={dropdownVariants}
                   initial="hidden"
                   animate="visible"
                   exit="exit"
-                  className='absolute top-full right-0 z-20 mt-3 hidden min-w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition-all duration-300 group-hover:block'>
+                  className='absolute top-full right-0 z-20 mt-3 hidden min-w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition-all duration-300 group-hover:block'
+                >
                   <div className='flex flex-col gap-1 p-2 text-gray-700'>
-                    <p onClick={() => navigate('/my-profile')} className='cursor-pointer rounded-md px-3 py-2 hover:bg-primary/10 hover:text-primary'>My Profile</p>
-                    <p onClick={() => navigate('/my-appointments')} className='cursor-pointer rounded-md px-3 py-2 hover:bg-primary/10 hover:text-primary'>My Appointments</p>
+                    <button
+                      onClick={() => handleNavigation('/my-profile')}
+                      className='w-full text-left cursor-pointer rounded-md px-3 py-2 hover:bg-primary/10 hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50'
+                    >
+                      My Profile
+                    </button>
+                    <button
+                      onClick={() => handleNavigation('/my-appointments')}
+                      className='w-full text-left cursor-pointer rounded-md px-3 py-2 hover:bg-primary/10 hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50'
+                    >
+                      My Appointments
+                    </button>
                     <hr className='my-1' />
-                    <p onClick={logout} className='cursor-pointer rounded-md px-3 py-2 hover:bg-red-500/10 hover:text-red-500'>Logout</p>
+                    <button
+                      onClick={handleLogout}
+                      className='w-full text-left cursor-pointer rounded-md px-3 py-2 hover:bg-red-500/10 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50'
+                    >
+                      Logout
+                    </button>
                   </div>
                 </motion.div>
               </AnimatePresence>
             </div>
           ) : (
-            <button onClick={() => navigate('/login')} className='hidden rounded-full bg-primary px-8 py-3 font-semibold text-white transition-all duration-300 hover:bg-primary/90 hover:shadow-lg hover:-translate-y-0.5 lg:block'>
+            <button
+              onClick={() => handleNavigation('/login')}
+              className='hidden rounded-full bg-primary px-8 py-3 font-semibold text-white transition-all duration-300 hover:bg-primary/90 hover:shadow-lg hover:-translate-y-0.5 lg:block focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50'
+            >
               Create account
             </button>
           )}
-          <button onClick={() => setShowMenu(true)} className='p-2 lg:hidden text-2xl'>
+
+          {/* Mobile Menu Toggle */}
+          <button
+            onClick={() => setShowMenu(true)}
+            className='p-2 lg:hidden text-2xl focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 rounded'
+            aria-label="Open menu"
+          >
             <FiMenu />
           </button>
         </div>
 
-        {/* ---- Mobile Menu with Staggered Items ---- */}
+        {/* Mobile Menu */}
         <AnimatePresence>
           {showMenu && (
             <>
@@ -128,29 +166,45 @@ const Navbar = () => {
                 animate={{ x: 0 }}
                 exit={{ x: '100%' }}
                 transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                className={`fixed top-0 right-0 bottom-0 z-30 w-4/5 max-w-sm bg-white lg:hidden`}
+                className='fixed top-0 right-0 bottom-0 z-30 w-4/5 max-w-sm bg-white lg:hidden'
               >
                 <div className='h-full flex flex-col'>
+
+                  {/* Mobile Header */}
                   <div className='flex items-center justify-between px-5 py-6 border-b'>
                     <span className='font-bold text-xl text-gray-800'>DocSpot</span>
-                    <button onClick={() => setShowMenu(false)} className='p-2 text-2xl'>
+                    <button
+                      onClick={() => setShowMenu(false)}
+                      className='p-2 text-2xl focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 rounded'
+                      aria-label="Close menu"
+                    >
                       <FiX />
                     </button>
                   </div>
+
+                  {/* Mobile Navigation Links */}
                   <motion.ul
                     variants={mobileListVariants}
                     initial="hidden"
                     animate="visible"
-                    className='flex-grow mt-8 flex flex-col gap-4 px-5 text-lg font-medium'>
+                    className='flex-grow mt-8 flex flex-col gap-4 px-5 text-lg font-medium'
+                  >
                     {navLinks.map((link) => (
                       <motion.li key={link.path} variants={mobileItemVariants}>
-                        <NavLink onClick={() => setShowMenu(false)} to={link.path} className={({ isActive }) => `block w-full text-center rounded-lg py-3 ${isActive ? 'bg-primary text-white' : 'hover:bg-primary/10'}`}>
+                        <button
+                          onClick={() => handleNavigation(link.path)}
+                          className={`block w-full text-center rounded-lg py-3 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 ${location.pathname === link.path
+                            ? 'bg-primary text-white'
+                            : 'hover:bg-primary/10 text-gray-700'
+                            }`}
+                        >
                           {link.label}
-                        </NavLink>
+                        </button>
                       </motion.li>
                     ))}
                   </motion.ul>
 
+                  {/* Mobile User Section */}
                   <div className="mt-auto border-t p-5">
                     {token && userData ? (
                       <div className="flex flex-col gap-4">
@@ -162,13 +216,31 @@ const Navbar = () => {
                           </div>
                         </div>
                         <div className='flex flex-col gap-2 text-center text-gray-700 font-medium'>
-                          <p onClick={() => { navigate('/my-profile'); setShowMenu(false); }} className='cursor-pointer rounded-md py-2.5 hover:bg-primary/10 hover:text-primary'>My Profile</p>
-                          <p onClick={() => { navigate('/my-appointments'); setShowMenu(false); }} className='cursor-pointer rounded-md py-2.5 hover:bg-primary/10 hover:text-primary'>My Appointments</p>
-                          <p onClick={() => { logout(); setShowMenu(false); }} className='cursor-pointer rounded-md py-2.5 hover:bg-red-500/10 text-red-500'>Logout</p>
+                          <button
+                            onClick={() => handleNavigation('/my-profile')}
+                            className='cursor-pointer rounded-md py-2.5 hover:bg-primary/10 hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50'
+                          >
+                            My Profile
+                          </button>
+                          <button
+                            onClick={() => handleNavigation('/my-appointments')}
+                            className='cursor-pointer rounded-md py-2.5 hover:bg-primary/10 hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50'
+                          >
+                            My Appointments
+                          </button>
+                          <button
+                            onClick={handleLogout}
+                            className='cursor-pointer rounded-md py-2.5 hover:bg-red-500/10 text-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50'
+                          >
+                            Logout
+                          </button>
                         </div>
                       </div>
                     ) : (
-                      <button onClick={() => { navigate('/login'); setShowMenu(false); }} className='w-full rounded-full bg-primary py-3 font-semibold text-white'>
+                      <button
+                        onClick={() => handleNavigation('/login')}
+                        className='w-full rounded-full bg-primary py-3 font-semibold text-white focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50'
+                      >
                         Login / Create Account
                       </button>
                     )}

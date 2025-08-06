@@ -112,7 +112,7 @@ const Footer = () => {
             <ul className='flex flex-col gap-3 text-sm'>
               <li><motion.div variants={linkVariants} whileHover="hover"><ScrollToTopLink to='/my-profile' className='hover:text-primary transition-colors text-left w-full'>My Profile</ScrollToTopLink></motion.div></li>
               <li><motion.div variants={linkVariants} whileHover="hover"><ScrollToTopLink to='/my-appointments' className='hover:text-primary transition-colors text-left w-full'>My Appointments</ScrollToTopLink></motion.div></li>
-              <li><motion.div variants={linkVariants} whileHover="hover"><a href='#speciality' className='hover:text-primary transition-colors'>Find by Speciality</a></motion.div></li>
+              <li><motion.div variants={linkVariants} whileHover="hover"><ScrollToTopLink to='/doctors' className='hover:text-primary transition-colors text-left w-full'>Find by Speciality</ScrollToTopLink></motion.div></li>
               <li><motion.div variants={linkVariants} whileHover="hover"><ScrollToTopLink to='/login' className='hover:text-primary transition-colors text-left w-full'>Login / Register</ScrollToTopLink></motion.div></li>
             </ul>
           </motion.div>
