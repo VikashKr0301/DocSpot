@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import { motion, animate, useTransform, useMotionValue } from 'framer-motion';
 import { FiArrowRight } from 'react-icons/fi';
 import { FaPlus, FaStethoscope, FaHeartbeat, FaCapsules } from 'react-icons/fa';
+import { AppContext } from '../context/AppContext';
 import { assets } from '../assets/assets';
 
 const AnimatedNumber = ({ to, suffix = "" }) => {
@@ -46,10 +47,38 @@ const blobVariants = {
 };
 
 const Header = () => {
+    const { doctors, backendUrl } = useContext(AppContext);
+    const [patientCount, setPatientCount] = useState(0);
     const targetRef = useRef(null);
     const mouseX = useMotionValue(0);
     const mouseY = useMotionValue(0);
     const [componentDimensions, setComponentDimensions] = useState({ width: 0, height: 0 });
+
+    // Fetch patient count from backend
+    useEffect(() => {
+        const fetchPatientCount = async () => {
+            try {
+                const response = await fetch(`${backendUrl}/api/admin/patient-count`);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        setPatientCount(data.count || 0);
+                    } else {
+                        setPatientCount(1250); // Fallback number
+                    }
+                } else {
+                    setPatientCount(1250); // Fallback number
+                }
+            } catch (error) {
+                console.error('Error fetching patient count:', error);
+                setPatientCount(1250); // Fallback number
+            }
+        };
+
+        if (backendUrl) {
+            fetchPatientCount();
+        }
+    }, [backendUrl]);
 
     useEffect(() => {
         if (targetRef.current) {
@@ -69,6 +98,10 @@ const Header = () => {
 
     const parallaxX = useTransform(mouseX, [0, componentDimensions.width], [-20, 20]);
     const parallaxY = useTransform(mouseY, [0, componentDimensions.height], [-20, 20]);
+
+    // Get real-time counts
+    const doctorCount = doctors?.length || 0;
+    const displayPatientCount = patientCount || 0;
 
     return (
         <motion.div
@@ -116,11 +149,11 @@ const Header = () => {
                 </motion.a>
                 <motion.div className='flex flex-col sm:flex-row items-center gap-6 sm:gap-8 md:gap-10 lg:gap-12 pt-4 sm:pt-6 md:pt-8' variants={itemVariants}>
                     <motion.div className='text-center' whileHover={{ scale: 1.05, y: -5 }} transition={{ type: 'spring', stiffness: 300 }}>
-                        <AnimatedNumber to={100} suffix="+" />
+                        <AnimatedNumber to={doctorCount} suffix="+" />
                         <p className='text-sm text-slate-500 tracking-wide mt-1'>Expert Doctors</p>
                     </motion.div>
                     <motion.div className='text-center' whileHover={{ scale: 1.05, y: -5 }} transition={{ type: 'spring', stiffness: 300 }}>
-                        <AnimatedNumber to={20000} suffix="+" />
+                        <AnimatedNumber to={displayPatientCount} suffix="+" />
                         <p className='text-sm text-slate-500 tracking-wide mt-1'>Happy Patients</p>
                     </motion.div>
                 </motion.div>
@@ -128,7 +161,7 @@ const Header = () => {
 
             {/* --------- Header Right: Image & Shape --------- */}
             <motion.div
-                className='w-full md:w-1/2 h-[350px] sm:h-[400px] md:h-[500px] lg:h-[550px] xl:min-h-[600px] self-end flex items-end justify-center mt-4 md:mt-0'
+                className='w-full md:w-1/2 h-[350px] sm:h-[400px] md:h-[500px] lg:h-[550px] xl:min-h-[600px] self-end flex items-end justify-center mt-1 sm:mt-0 md:mt-0'
                 variants={imageVariants}
             >
                 <motion.div
@@ -138,7 +171,7 @@ const Header = () => {
                     style={{ x: parallaxX, y: parallaxY }}
                 ></motion.div>
                 <img
-                    className='relative z-10 w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-none h-full object-contain object-bottom'
+                    className='relative z-10 w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-none h-full object-contain object-bottom'
                     src={assets.header_img}
                     alt="A friendly doctor holding a clipboard"
                 />

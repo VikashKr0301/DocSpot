@@ -148,4 +148,15 @@ const adminDashboard = async (req, res) => {
     }
 }
 
-export { loginAdmin, appointmentsAdmin, appointmentCancel, addDoctor, allDoctors, adminDashboard }
+// API to get patient count for frontend header
+const getPatientCount = async (req, res) => {
+    try {
+        const users = await userModel.find({});
+        res.json({ success: true, count: users.length });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+}
+
+export { loginAdmin, appointmentsAdmin, appointmentCancel, addDoctor, allDoctors, adminDashboard, getPatientCount };

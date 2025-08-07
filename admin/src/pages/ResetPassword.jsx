@@ -3,6 +3,7 @@ import { AdminContext } from '../context/AdminContext';
 import { DoctorContext } from '../context/DoctorContext';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import { FaSpinner, FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const ResetPassword = () => {
     const [newPassword, setNewPassword] = useState('');
@@ -99,7 +100,7 @@ const ResetPassword = () => {
                                 onClick={() => setShowPassword(!showPassword)}
                                 className='absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-700'
                             >
-                                {showPassword ? '👁️' : '👁️‍🗨️'}
+                                {showPassword ? <FaEyeSlash /> : <FaEye />}
                             </button>
                         </div>
                     </div>
@@ -120,7 +121,7 @@ const ResetPassword = () => {
                                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                                 className='absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-700'
                             >
-                                {showConfirmPassword ? '👁️' : '👁️‍🗨️'}
+                                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
                             </button>
                         </div>
                         {newPassword && confirmPassword && newPassword !== confirmPassword && (
@@ -130,15 +131,11 @@ const ResetPassword = () => {
 
                     <button
                         type="submit"
-                        disabled={isLoading || newPassword !== confirmPassword}
-                        className='w-full bg-primary text-white py-3 rounded-md hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
+                        disabled={isLoading || (newPassword && confirmPassword && newPassword !== confirmPassword)}
+                        className='w-full bg-primary text-white py-3 rounded-md hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'
                     >
-                        {isLoading ? (
-                            <span className='flex items-center justify-center gap-2'>
-                                <div className='animate-spin rounded-full h-4 w-4 border-b-2 border-white'></div>
-                                Resetting...
-                            </span>
-                        ) : 'Reset Password'}
+                        {isLoading && <FaSpinner className="animate-spin" />}
+                        {isLoading ? 'Resetting...' : 'Reset Password'}
                     </button>
                 </form>
 
