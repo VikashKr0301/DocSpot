@@ -46,7 +46,7 @@ const ResetPassword = () => {
                 // Redirect to appropriate login page
                 setTimeout(() => {
                     if (type === 'doctor') {
-                        window.location.href = 'https://docspot-admin.onrender.com'; // Redirect to admin login
+                        window.location.href = 'http://localhost:5174';
                     } else {
                         navigate('/login');
                     }
@@ -84,6 +84,7 @@ const ResetPassword = () => {
                 <h2 className='text-2xl font-semibold text-slate-800 mb-6 text-center'>
                     Reset {type === 'doctor' ? 'Doctor ' : ''}Password
                 </h2>
+                <p className='text-center mb-6 text-slate-600'>Enter your new password below</p>
 
                 <form onSubmit={handleSubmit}>
                     <div className='mb-4'>
@@ -94,7 +95,7 @@ const ResetPassword = () => {
                                 value={newPassword}
                                 onChange={(e) => setNewPassword(e.target.value)}
                                 className='w-full p-3 border border-slate-300 rounded-md focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors pr-10'
-                                placeholder='Enter new password'
+                                placeholder='Enter new password (min 8 characters)'
                                 required
                             />
                             <button
@@ -126,17 +127,29 @@ const ResetPassword = () => {
                                 {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
                             </button>
                         </div>
+                        {newPassword && confirmPassword && newPassword !== confirmPassword && (
+                            <p className='text-red-500 text-sm mt-1'>Passwords do not match</p>
+                        )}
                     </div>
 
                     <button
                         type="submit"
-                        disabled={isLoading}
-                        className='w-full bg-primary text-white py-3 rounded-md hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50'
+                        disabled={isLoading || (newPassword && confirmPassword && newPassword !== confirmPassword)}
+                        className='w-full bg-primary text-white py-3 rounded-md hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed'
                     >
                         {isLoading && <FaSpinner className="animate-spin" />}
                         {isLoading ? 'Resetting...' : 'Reset Password'}
                     </button>
                 </form>
+
+                <div className='mt-4 text-center'>
+                    <button
+                        onClick={() => navigate('/login')}
+                        className='text-primary hover:underline text-sm'
+                    >
+                        Back to Login
+                    </button>
+                </div>
             </div>
         </div>
     );
