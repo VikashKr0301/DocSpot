@@ -131,10 +131,8 @@ const DoctorAppointments = () => {
         try {
             if (actionType === 'cancel') {
                 await cancelAppointment(selectedAppointment._id);
-                toast.success("Appointment cancelled successfully!");
             } else if (actionType === 'complete') {
                 await completeAppointment(selectedAppointment._id);
-                toast.success("Appointment completed successfully!");
             }
         } catch (error) {
             console.error('Action error:', error);
@@ -166,11 +164,10 @@ const DoctorAppointments = () => {
     //Payment Badge with icons
     const PaymentBadge = ({ isOnline }) => (
         <div className="flex items-center justify-center">
-            <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${
-                isOnline 
-                    ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' 
+            <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${isOnline
+                    ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
                     : 'bg-amber-100 text-amber-800 border border-amber-200'
-            }`}>
+                }`}>
                 {isOnline ? (
                     <>
                         <FaCreditCard className="w-3 h-3" />
@@ -434,8 +431,8 @@ const DoctorAppointments = () => {
                                 <button
                                     onClick={handleConfirmAction}
                                     className={`px-6 py-2 rounded-md font-bold transition-colors flex items-center gap-2 disabled:opacity-50 ${actionType === 'cancel'
-                                            ? 'bg-red-600 hover:bg-red-700 text-white'
-                                            : 'bg-green-600 hover:bg-green-700 text-white'
+                                        ? 'bg-red-600 hover:bg-red-700 text-white'
+                                        : 'bg-green-600 hover:bg-green-700 text-white'
                                         }`}
                                     disabled={isLoading}
                                 >

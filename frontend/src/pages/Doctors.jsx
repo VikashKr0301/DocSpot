@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../context/AppContext';
 import { Link, useParams } from 'react-router-dom';
-import { FaFilter } from "react-icons/fa"; // Using an icon for the mobile filter button
+import { FaFilter } from "react-icons/fa"; 
 
 const Doctors = () => {
   const { speciality } = useParams();
@@ -10,7 +10,7 @@ const Doctors = () => {
   const [filteredDoctors, setFilteredDoctors] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
 
-  // Refactored: A single list of specialities to avoid code repetition
+  // A single list of specialities to avoid code repetition
   const specialitiesList = [
     'General physician', 'Gynecologist', 'Dermatologist',
     'Pediatricians', 'Neurologist', 'Gastroenterologist', 'Cardiologist', 'Orthopedician'
